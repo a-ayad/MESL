@@ -1,0 +1,10 @@
+{
+    "training_epochs": 50,
+    "batchsize": 64,
+    "learningrate": 0.0002,
+    "batch_concat": 1,
+
+    "host": "192.168.188.20",
+    "port": 10087,
+    "max_recv": 4096
+}

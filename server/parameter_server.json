@@ -1,0 +1,9 @@
+{
+    "learningrate": 0.0002,
+    "update_threshold": 0.0,
+    "max_nr_clients": 5,
+
+    "host": "0.0.0.0",
+    "port": 10087,
+    "max_recv": 4096
+}
