@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fa85c071-62b0-4983-9902-346282b325ba" name="Default Changelist" comment="" />
+    <list default="true" id="fa85c071-62b0-4983-9902-346282b325ba" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Splitleraning_paper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Splitleraning_paper.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pretrainer/pretrainerlatesplit.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/advanced settings.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/client/Client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/Server.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1qXCAfz8Dw58H8AXIV5sJzQ9URT" />
   <component name="ProjectViewState">
@@ -15,8 +27,9 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/Splitlearn IoT" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -26,6 +39,35 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\melvi\PycharmProjects\Splitleraning_paper\client" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Server" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Splitleraning_paper" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/server" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/Server.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.Server" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -39,6 +81,9 @@
       <updated>1617216405431</updated>
       <workItem from="1617216420157" duration="2908000" />
       <workItem from="1617219472331" duration="95000" />
+      <workItem from="1617773573036" duration="14857000" />
+      <workItem from="1618149896204" duration="3575000" />
+      <workItem from="1618566160716" duration="5078000" />
     </task>
     <servers />
   </component>
@@ -46,13 +91,36 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="502" y="219" key="FileChooserDialogImpl" timestamp="1617218945563">
+    <state x="934" y="245" key="FileChooserDialogImpl" timestamp="1619375165454">
       <screen x="0" y="0" width="1440" height="920" />
     </state>
-    <state x="502" y="219" key="FileChooserDialogImpl/0.0.1440.920@0.0.1440.920" timestamp="1617218945563" />
-    <state x="232" y="106" key="SettingsEditor" timestamp="1617217755185">
+    <state x="934" y="245" key="FileChooserDialogImpl/0.0.1440.920@0.0.1440.920" timestamp="1619375165454" />
+    <state width="1397" height="242" key="GridCell.Tab.0.bottom" timestamp="1619376881075">
       <screen x="0" y="0" width="1440" height="920" />
     </state>
-    <state x="232" y="106" key="SettingsEditor/0.0.1440.920@0.0.1440.920" timestamp="1617217755185" />
+    <state width="1397" height="242" key="GridCell.Tab.0.bottom/0.0.1440.920@0.0.1440.920" timestamp="1619376881075" />
+    <state width="1397" height="242" key="GridCell.Tab.0.center" timestamp="1619376881075">
+      <screen x="0" y="0" width="1440" height="920" />
+    </state>
+    <state width="1397" height="242" key="GridCell.Tab.0.center/0.0.1440.920@0.0.1440.920" timestamp="1619376881075" />
+    <state width="1397" height="242" key="GridCell.Tab.0.left" timestamp="1619376881074">
+      <screen x="0" y="0" width="1440" height="920" />
+    </state>
+    <state width="1397" height="242" key="GridCell.Tab.0.left/0.0.1440.920@0.0.1440.920" timestamp="1619376881074" />
+    <state width="1397" height="242" key="GridCell.Tab.0.right" timestamp="1619376881075">
+      <screen x="0" y="0" width="1440" height="920" />
+    </state>
+    <state width="1397" height="242" key="GridCell.Tab.0.right/0.0.1440.920@0.0.1440.920" timestamp="1619376881075" />
+    <state x="176" y="66" key="SettingsEditor" timestamp="1619376880144">
+      <screen x="0" y="0" width="1440" height="920" />
+    </state>
+    <state x="176" y="66" key="SettingsEditor/0.0.1440.920@0.0.1440.920" timestamp="1619376880144" />
+    <state x="431" y="289" key="com.intellij.ide.util.TipDialog" timestamp="1618149905878">
+      <screen x="0" y="0" width="1440" height="920" />
+    </state>
+    <state x="431" y="289" key="com.intellij.ide.util.TipDialog/0.0.1440.920@0.0.1440.920" timestamp="1618149905878" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MESL$Server.coverage" NAME="Server Coverage Results" MODIFIED="1619376817999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
   </component>
 </project>

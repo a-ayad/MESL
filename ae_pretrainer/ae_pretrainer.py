@@ -7,10 +7,13 @@ from torchvision import transforms
 import torch
 
 batchsize = 64
+test_batches = 1500
 epoch = 250
-error = nn.MSELoss()
 lr = 0.0001
 
+prev_loss = 999
+diverge_tresh = 1.1
+lr_adapt = 0.5
 
 # Create Transforms
 transform = transforms.Compose([
@@ -21,13 +24,9 @@ transform = transforms.Compose([
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
 testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
 
-
-# Create Datasets
-subsetA, subsetB = torch.utils.data.random_split(trainset, [round(0.2*len(trainset)), len(trainset)-round(0.2*len(trainset))])
-
 # Load Datasets
 train_loader = torch.utils.data.DataLoader(trainset, batch_size=batchsize, shuffle=True, num_workers=2)
-test_loader = torch.utils.data.DataLoader(testset, batch_size=1500, shuffle=False, num_workers=2)
+test_loader = torch.utils.data.DataLoader(testset, batch_size=test_batches, shuffle=False, num_workers=2)
 total_batch = len(train_loader)
 
 
@@ -110,7 +109,7 @@ def start_training():
     for c, batch_test in enumerate(test_loader):
         x_tester, label_tester = batch_test
         break
-    prevloss = 999
+    prevloss = prev_loss
     learnrate = lr###
     optimizerencode = Adam(encode.parameters(), lr=learnrate)###
     optimizerdecode = Adam(decode.parameters(), lr=learnrate)###
@@ -142,7 +141,7 @@ def start_training():
         print("epoch: {}, train-loss: {:.6f}, test-loss: {:.6f} ".format(e + 1,  loss_train, loss_test))
 
 
-        if loss_test <= prevloss*1.1:
+        if loss_test <= prevloss*diverge_tresh:
             torch.save(encode.state_dict(), "./convencoder.pth")
             encode2 = Encode()
             encode2.load_state_dict(torch.load("./convencoder.pth"))
@@ -160,7 +159,7 @@ def start_training():
             decode.eval()
             decode.to(device)
             #break
-            learnrate = 0.5*learnrate
+            learnrate = lr_adapt*learnrate
             print(learnrate)
             optimizerencode = Adam(encode.parameters(), lr=learnrate)###
             optimizerdecode = Adam(decode.parameters(), lr=learnrate)###
@@ -180,6 +179,9 @@ def main():
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
+
+    global error
+    error = nn.MSELoss()
 
     global client
     client = Client()

@@ -10,17 +10,15 @@ import torch.nn as nn
 from torch.optim import SGD
 from torchvision import transforms
 
-
+#load data from json file
 f = open('parameter_client.json', )
 data = json.load(f)
 
+#set parameters fron json file
 epoch = data["trainingepochs"]
 lr = data["learningrate"]
 batchsize = data["batchsize"]
-
-#value on server has to be the same
 batch_concat = data["batch_concat"]
-
 host = data["host"]
 port = data["port"]
 max_recv = data["max_recv"]
@@ -39,9 +37,10 @@ from client.GTSRB import gtsrb_dataset as dataset
 trainset = dataset.GTSRB(root_dir='.\GTSRB', train=True,  transform=transform)
 testset = dataset.GTSRB(root_dir=".\GTSRB", train=False,  transform=transform)
 
-
 train_loader = torch.utils.data.DataLoader(trainset, batch_size=batchsize, shuffle=True, num_workers=2)
 test_loader = torch.utils.data.DataLoader(testset, batch_size=batchsize, shuffle=False, num_workers=2)
+
+
 total_batch = len(train_loader)
 total_batch_train = len(train_loader)
 total_batch_test = len(test_loader)
@@ -95,7 +94,6 @@ class Client(nn.Module):
         x = self.conv3(x)
         x = self.relu3(x)
         x = self.norm3(x)
-        #x = encode(x)
         return x
 
 
@@ -126,7 +124,12 @@ def recieve_msg(sock):
     return msg
 
 def recv_msg(sock):
+    """
+    gets the message length (which corresponds to the first for bytes of the recieved bytestream) with the recvall function
 
+    :param sock: socket
+    :return: returns the data retrieved from the recvall function
+    """
     # read message length and unpack it into an integer
     raw_msglen = recvall(sock, 4)
     if not raw_msglen:
@@ -137,7 +140,13 @@ def recv_msg(sock):
 
 
 def recvall(sock, n):
-    # helper function to receive n bytes or return None if EOF is hit
+    """
+    returns the data from a recieved bytestream, helper function to receive n bytes or return None if EOF is hit
+    :param sock: socket
+    :param n: length in bytes (number of bytes)
+    :return: message
+    """
+    #
     data = b''
     while len(data) < n:
         packet = sock.recv(n - len(data))

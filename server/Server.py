@@ -9,10 +9,11 @@ from torch.optim import Adam, SGD
 from threading import Thread
 import time
 
-
+#load data from json file
 f = open('parameter_server.json', )
 data = json.load(f)
 
+#set parameters fron json file
 host = data["host"]
 port = data["port"]
 max_recv = data["max_recv"]
@@ -108,7 +109,6 @@ class initial_Client(nn.Module):
         x = self.conv3(x)
         x = self.relu3(x)
         x = self.norm3(x)
-        # x = encode(x)
         return x
 
 
@@ -126,9 +126,11 @@ def send_msg(sock, content):
 
 def recieve_msg(sock):
     """
-    recieves the meassage with helper function, umpickles the message and separates the getid from the actual massage content
+    recieves the meassage with helper function, unpickles the message and separates the getid from the actual massage content
     calls the request handler
-    :param sock: socket
+    :param
+        sock: socket
+    :return: none
     """
     msg = recv_msg(sock)  # receive client message from socket
     msg = pickle.loads(msg)
@@ -139,6 +141,13 @@ def recieve_msg(sock):
 
 
 def recv_msg(sock):
+    """
+    gets the message length (which corresponds to the first for bytes of the recieved bytestream) with the recvall function
+
+    :param
+        sock: socket
+    :return: returns the data retrieved from the recvall function
+    """
     raw_msglen = recvall(sock, 4)
     if not raw_msglen:
         return None
@@ -147,6 +156,12 @@ def recv_msg(sock):
 
 
 def recvall(sock, n):
+    """
+    returns the data from a recieved bytestream, helper function to receive n bytes or return None if EOF is hit
+    :param sock: socket
+    :param n: length in bytes (number of bytes)
+    :return: message
+    """
     data = b''
     while len(data) < n:
         packet = sock.recv(n - len(data))
@@ -297,6 +312,7 @@ def main():
     """
     initialize device, server model, initial client model, optimizer, loss, decoder and accepts new clients
     """
+    print(torch.version.cuda)
     global device
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     if (torch.cuda.is_available()):
@@ -322,9 +338,6 @@ def main():
 
     global error
     error = nn.CrossEntropyLoss()
-
-    global optimizer_client
-    optimizer_client = SGD(client.parameters(), lr=lr, momentum=0.9)
 
     global decode
     decode = Decode()
