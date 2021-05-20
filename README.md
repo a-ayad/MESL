@@ -104,4 +104,4 @@ To run the model, the server.py script has to be run the server. Afterwards, the
 To do advanced configurations, plase follow the instructions in the document advanced_settings.pdf
 
 ## Author
-Melvin Renner
+Melvin Renner, Ahmad Ayad
