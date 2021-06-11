@@ -36,7 +36,7 @@ Here's a brief overview of how you can use this project to run split learning on
 
 ### Download the dataset
 The GTSRB dataset can be downloaded from 
-[link](published-archive.html). download and unpack the zip file. Copy the folders "testset" and "trainingset" into the ./server/GTSRB/GTSRB directory in the project.
+[link](https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/published-archive.html). download and unpack the zip file. Copy the folders "testset" and "trainingset" into the ./server/GTSRB/GTSRB directory in the project.
 
 ### Set client side configurations
 
