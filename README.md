@@ -1,4 +1,6 @@
-# Split Learning
+# Improving the Communication and Computation Efficiency of Split Learning for IoT Applications
+# More Efficient Split Learning Method (MESL)
+# This is the repository containing the code for this paper "Improving the Communication and Computation Efficiency of Split Learning for IoT Applications"
 
 
 ## Requirements
