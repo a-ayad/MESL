@@ -1,0 +1,12 @@
+certifi==2018.01.18
+cffi==1.14.5
+mkl-fft==1.3.0
+mkl-random==1.1.0
+mkl-service==2.3.0
+numpy==1.19.5
+Pillow==8.2.0
+pycparser==2.20
+six==1.16.0
+thop==0.0.31
+torch==1.8.1a0+56b43f4
+torchvision==0.9.1a0+8fb5838

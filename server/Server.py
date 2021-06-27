@@ -126,7 +126,8 @@ def send_msg(sock, content):
 
 def recieve_msg(sock):
     """
-    recieves the meassage with helper function, unpickles the message and separates the getid from the actual massage content
+    recieves the meassage with helper function, unpickles the message and separates 
+    the getid from the actual massage content
     calls the request handler
     :param
         sock: socket
@@ -213,7 +214,8 @@ def get_testacc(conn, msg):
 
 def updateclientmodels(sock, updatedweights):
     """
-    send the actual clientside weights to all connected clients, except from the clint that is currently training
+    send the actual clientside weights to all connected clients, 
+    except from the clint that is currently training
 
     :param sock: the socket
     :param updatedweights: the client side weghts with actual status
@@ -229,9 +231,12 @@ def updateclientmodels(sock, updatedweights):
 
 def calc_gradients(conn, msg):
     """
-    this method does the forward propagation with the recieved data, from to first layer of the decoder to the last layer
-    of the model. it calculates the loss, and does the backward propagation up to the cutlayer of the model.
-    Depending on if the loss threshold is reached it sends the gradient of the back propagation at the cut layer and
+    this method does the forward propagation with the recieved data, 
+    from to first layer of the decoder to the last layer
+    of the model. it calculates the loss, and does the backward propagation up to the 
+    cutlayer of the model.
+    Depending on if the loss threshold is reached it sends the gradient of the back 
+    propagation at the cut layer and
     information about loss/accuracy/trainingtime back to the client.
 
     :param conn: the connected socket of the currently training client
@@ -263,7 +268,8 @@ def calc_gradients(conn, msg):
         add_correct_train = torch.sum(output_train.argmax(dim=1) == lbl_train).item()
         add_total_train = len(lbl_train)
         total_training_time = time.time() - start_time_training
-
+	
+	
         if train_loss.item() > update_treshold:
             pass
         else:
@@ -275,18 +281,20 @@ def calc_gradients(conn, msg):
                "add_total_train": add_total_train,
                "active_trtime_batch_server": total_training_time,
                }
-
+        print("Create the msg")
         send_msg(conn, msg)
+        print("Send the msg back")
         dc += 1
 
 
 def initialize_client(conn):
     """
-    called when new client connect. if new connected client is neot the first connected client, the send the initial weights to
+    called when new client connect. if new connected client is not the first connected 
+    client, the send the initial weights to
     the new connected client
     :param conn:
     """
-    print(len(connectedclients))
+    print("connected clients: ",len(connectedclients))
     if len(connectedclients) == 1:
         msg = 0
     else:
@@ -301,6 +309,7 @@ def clientHandler(conn, addr):
         try:
             recieve_msg(conn)
         except:
+            print("No message, wait!")
             pass
 
 
@@ -314,7 +323,8 @@ def main():
     """
     print(torch.version.cuda)
     global device
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = 'cpu' 
+    #torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     if (torch.cuda.is_available()):
         print("training on gpu")
     seed = 0
@@ -332,30 +342,37 @@ def main():
     global client
     client = initial_Client()
     client.to(device)
+    print("initial_Client complete.")
 
     global optimizer
     optimizer = SGD(server.parameters(), lr=lr, momentum=0.9)
 
     global error
     error = nn.CrossEntropyLoss()
-
+    print("Calculate CrossEntropyLoss complete.")
+	
     global decode
     decode = Decode()
     decode.load_state_dict(torch.load("./convdecoder.pth"))
     decode.eval()
     decode.to(device)
+    print("Load decoder parameters complete.")
 
     s = socket.socket()
     s.bind((host, port))
     s.listen(max_numclients)
-
+    print("Listen to client reply.")
+	
     for i in range(max_numclients):
         conn, addr = s.accept()
         connectedclients.append(conn)
         print('Conntected with', addr)
         t = Thread(target=clientHandler, args=(conn, addr))
+        print('Thread established')
         trds.append(t)
         t.start()
+        print('Thread start')
+
     for t in trds:
         t.join()
 

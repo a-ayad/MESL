@@ -15,7 +15,7 @@ f = open('parameter_client.json', )
 data = json.load(f)
 
 #set parameters fron json file
-epoch = data["trainingepochs"]
+epoch = data["training_epochs"]
 lr = data["learningrate"]
 batchsize = data["batchsize"]
 batch_concat = data["batch_concat"]
@@ -23,6 +23,10 @@ host = data["host"]
 port = data["port"]
 max_recv = data["max_recv"]
 
+print("Getting the metadata epoch: ", epoch)
+print("Getting the metadata host: ", host)
+print("Getting the metadata port: ", port)
+print("Getting the metadata batchsize: ", batchsize)
 
 transform = transforms.Compose([
     transforms.Resize((32, 32)),
@@ -33,7 +37,7 @@ transform = transforms.Compose([
 
 
 # Create Datasets
-from client.GTSRB import gtsrb_dataset as dataset
+from GTSRB import gtsrb_dataset as dataset
 trainset = dataset.GTSRB(root_dir='.\GTSRB', train=True,  transform=transform)
 testset = dataset.GTSRB(root_dir=".\GTSRB", train=False,  transform=transform)
 
@@ -44,9 +48,6 @@ test_loader = torch.utils.data.DataLoader(testset, batch_size=batchsize, shuffle
 total_batch = len(train_loader)
 total_batch_train = len(train_loader)
 total_batch_test = len(test_loader)
-
-
-
 
 class Encode(nn.Module):
     """
@@ -96,9 +97,6 @@ class Client(nn.Module):
         x = self.norm3(x)
         return x
 
-
-
-
 def send_msg(sock, getid, content):
     """
     pickles the content (creates bitstream), adds header and send message via tcp port
@@ -112,7 +110,6 @@ def send_msg(sock, getid, content):
     #print("communication overhead send: ", sys.getsizeof(msg), " bytes")
     sock.sendall(msg)
 
-
 def recieve_msg(sock):
     """
     recieves the meassage with helper function, umpickles the message and separates the getid from the actual massage content
@@ -125,7 +122,8 @@ def recieve_msg(sock):
 
 def recv_msg(sock):
     """
-    gets the message length (which corresponds to the first for bytes of the recieved bytestream) with the recvall function
+    gets the message length (which corresponds to the first 
+    4 bytes of the recieved bytestream) with the recvall function
 
     :param sock: socket
     :return: returns the data retrieved from the recvall function
@@ -138,10 +136,10 @@ def recv_msg(sock):
     # read the message data
     return recvall(sock, msglen)
 
-
 def recvall(sock, n):
     """
-    returns the data from a recieved bytestream, helper function to receive n bytes or return None if EOF is hit
+    returns the data from a recieved bytestream, helper function 
+    to receive n bytes or return None if EOF is hit
     :param sock: socket
     :param n: length in bytes (number of bytes)
     :return: message
@@ -149,16 +147,17 @@ def recvall(sock, n):
     #
     data = b''
     while len(data) < n:
+        print("Start function sock.recv")
         packet = sock.recv(n - len(data))
         if not packet:
             return None
         data += packet
     return data
 
-
 def start_training(s):
     """
-    actuall function, which does the training from the train loader and testing from the tesloader epoch/bacth wise
+    actuall function, which does the training from the train loader and 
+    testing from the tesloader epoch/bacth wise
     :param s: socket
     """
     train_losses = []
@@ -170,9 +169,13 @@ def start_training(s):
     train_accs.append(0)
     test_losses.append(0)
     test_accs.append(0)
-
+    print("train_losses", train_losses)
+    print("train_accs", train_accs)
+	
     start_time_training = time.time()
     for e in range(epoch):
+        print(f"Starting epoch: {e}/{epoch}") 
+        #add comments
         train_loss = 0.0
         correct_train, total_train = 0, 0
         loss_test = 0.0
@@ -188,13 +191,20 @@ def start_training(s):
         concat_tensors = []
         concat_labels = []
         epoch_start_time = time.time()
+        print("Start time: ", epoch_start_time)
         for b, batch in enumerate(train_loader):
+            print("batch: ", b)
             active_training_time_batch_client = 0
             start_time_batch_forward = time.time()
             x_train, label_train = batch
-            x_train, label_train = x_train.to(device), label_train.to(device)
+            #print("x_train:", x_train)
+            print("label_train:", label_train)
+            x_train = x_train.to(device)
+            print("len1: ", len(x_train))
+            print("len2: ", len(label_train))
+            label_train = label_train.to(device)
             optimizer.zero_grad()
-
+            print("optimizer.zero_grad")
             # batch concat
             if concat_counter_send < batch_concat:
                 concat_tensors.append(client(x_train))
@@ -205,9 +215,9 @@ def start_training(s):
                 client_output_train = concat_tensors[0]
                 for k in range(batch_concat-1):
                     client_output_train = torch.cat((client_output_train, concat_tensors[k+1]), 0)
+                print("Calculate client_output_train")
 
             client_output = client_output_train.clone().detach().requires_grad_(False)
-
             with torch.no_grad():
                 client_output = encode(client_output)
 
@@ -217,21 +227,21 @@ def start_training(s):
                 'batch_concat' : batch_concat,
                 'batchsize' : batchsize
             }
-
             active_training_time_batch_client += time.time()-start_time_batch_forward
+            print("Send the message to server")
             send_msg(s, 0, msg)
 
             concat_labels = []
-
             while concat_counter_recv < concat_counter_send:
                 msg = recieve_msg(s)
                 start_time_batch_backward = time.time()
 
                 client_grad = msg["grad_client"]
                 if client_grad == "abort":
+                    print("client_grad: ", client_grad)
                     train_loss_add, add_correct_train, add_total_train = msg["train_loss"], msg["add_correct_train"],  msg["add_total_train"]
                     correct_train += add_correct_train
-                    total_train_nr += 1#
+                    total_train_nr += 1
                     total_train += add_total_train
                     train_loss += train_loss_add
                     batches_aborted += 1
@@ -259,6 +269,8 @@ def start_training(s):
             concat_tensors = []
 
         epoch_endtime = time.time() - epoch_start_time
+        print("epoch_endtime: ", epoch_endtime)
+        print("Starting test!")
         with torch.no_grad():
                 for b_t, batch_t in enumerate(test_loader):
 
@@ -272,9 +284,11 @@ def start_training(s):
                     msg = {'client_output_test': client_output_test,
                            'label_test': label_test,
                            }
+                    print("The msg is:", msg)
                     send_msg(s, 1, msg)
+                    print("294: send_msg success!")
                     msg = recieve_msg(s)
-
+                    print("296: recieve_msg success!")
                     correct_test_add = msg["correct_test"]
                     test_loss = msg["test_loss"]
                     loss_test += test_loss
@@ -291,20 +305,15 @@ def start_training(s):
         test_losses.append(loss_test / total_test_nr)
         test_accs.append(correct_test / total_test)
 
-
-
         status_epoch = "epoch: {}, train-loss: {:.4f}, train-acc: {:.2f}%, test-loss: {:.4f}, test-acc: {:.2f}%, trainingtime for epoch: {:.6f}s, batches abortrate:{:.2f}  ".format(
             e + 1, train_loss / total_train_nr, (correct_train / total_train) * 100, loss_test / total_test_nr,
             (correct_test / total_test) * 100, epoch_endtime,  batches_aborted/total_train_nr)
-        print(status_epoch)
+        print("status_epoch: ", status_epoch)
 
     total_training_time = time.time() - start_time_training
     time_info = "trainingtime for {} epochs: {:.2f}s".format(epoch, total_training_time)
-    print(time_info)
+    print("time_info: ", time_info)
     plot(test_accs, train_accs, train_losses, test_losses)
-
-
-
 
 def plot(test_accs, train_accs, train_losses, test_losses):
     """
@@ -333,19 +342,21 @@ def plot(test_accs, train_accs, train_losses, test_losses):
 
     plt.show()
 
-
-
 def initialize_model(s):
     """
-    if new connected client is neot the first connected client, the initial weights are fetched from the server
+    if new connected client is not the first connected client, 
+    the initial weights are fetched from the server
     :param conn:
     """
     msg = recieve_msg(s)
     if msg == 0:
+        print("msg == 0")
         pass
     else:
+        print("msg != 0")
         client.load_state_dict(msg, strict=False)
         print("model successfully initialized")
+    print("start_training")
     start_training(s)
 
 def main():
@@ -354,9 +365,11 @@ def main():
     """
 
     global device
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = 'cpu' 
+    #torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     if(torch.cuda.is_available()):
         print("training on gpu")
+    print("training on,", device)
     seed = 0
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -367,25 +380,30 @@ def main():
 
     global client
     client = Client()
+    print("Start Client")
     client.to(device)
 
     global optimizer
     optimizer = SGD(client.parameters(), lr=lr, momentum=0.9)
+    print("Start Optimizer")
 
     global error
     error = nn.CrossEntropyLoss()
+    print("Start loss calcu")
 
     global encode
     encode = Encode()
+    print("Start Encoder")
     encode.load_state_dict(torch.load("./convencoder.pth"))
     encode.eval()
+    print("Start eval")
     encode.to(device)
 
     s = socket.socket()
+    print("Start socket connect")
     s.connect((host, port))
+    print("Socket connect success, to.", host, port)
     initialize_model(s)
-
-
 
 if __name__ == '__main__':
     main()

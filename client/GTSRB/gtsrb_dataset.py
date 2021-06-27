@@ -18,7 +18,7 @@ class GTSRB(Dataset):
         csv_file_path = os.path.join(
             root_dir, self.base_folder, self.sub_directory, self.csv_file_name).replace("\\","/")
 
-        self.csv_data = pd.read_csv(csv_file_path)
+        self.csv_data = pd.read_csv(csv_file_path, sep=';')
         self.transform = transform
 
     def __len__(self):
@@ -27,8 +27,9 @@ class GTSRB(Dataset):
     def __getitem__(self, idx):
         img_path = os.path.join(self.root_dir, self.base_folder, self.sub_directory,
                                 self.csv_data.iloc[idx, 0]).replace("\\","/")
+                                
         img = Image.open(img_path)
-        classId = self.csv_data.iloc[idx, 1]
+        classId = self.csv_data.iloc[idx, -1]
 
         if self.transform is not None:
             img = self.transform(img)
